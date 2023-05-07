@@ -1,0 +1,46 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                    http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <parent>
+        <artifactId>test-app</artifactId>
+        <groupId>ru.hoteladvisors</groupId>
+        <version>1</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>test-app-ear</artifactId>
+    <packaging>ear</packaging>
+
+    <build>
+        <finalName>test-app</finalName>
+        <plugins>
+            <plugin>
+                <artifactId>maven-ear-plugin</artifactId>
+                <version>${maven-ear-plugin.version}</version>
+                <configuration>
+                    <finalName>test-app</finalName>
+                    <generatedDescriptorLocation>${basedir}/src/main/resources/META-INF</generatedDescriptorLocation>
+                    <defaultLibBundleDir>lib</defaultLibBundleDir>
+                    <modules>
+                        <webModule>
+                            <groupId>ru.hoteladvisors</groupId>
+                            <artifactId>test-app-web</artifactId>
+                            <bundleFileName>test-app.war</bundleFileName>
+                        </webModule>
+                    </modules>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>ru.hoteladvisors</groupId>
+            <artifactId>test-app-web</artifactId>
+            <version>1</version>
+            <type>war</type>
+        </dependency>
+    </dependencies>
+</project>

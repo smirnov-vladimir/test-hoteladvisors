@@ -1,0 +1,140 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="2023-05-06-ddl" author="vladimir.smirnov">
+        <createTable tableName="address" remarks="Адреса">
+            <column name="id" type="INT UNSIGNED" autoIncrement="true" remarks="Уникальный идентификатор записи">
+                <constraints primaryKey="true" primaryKeyName="pk_address"/>
+            </column>
+            <column name="post_index" type="varchar(50)" remarks="Почтовый индекс"/>
+            <column name="city" type="varchar(100)" remarks="Город">
+                <constraints nullable="false"/>
+            </column>
+            <column name="street" type="varchar(200)" remarks="Улица">
+                <constraints nullable="false"/>
+            </column>
+            <column name="house" type="varchar(50)" remarks="Дом">
+                <constraints nullable="false"/>
+            </column>
+            <column name="flat" type="varchar(50)" remarks="Квартира"/>
+        </createTable>
+
+        <createTable tableName="dic_legal_form" remarks="Справочник правовых форм">
+            <column name="id" type="INT UNSIGNED" autoIncrement="true" remarks="Уникальный идентификатор записи">
+                <constraints primaryKey="true" primaryKeyName="pk_company_legal_form"/>
+            </column>
+            <column name="code" type="varchar(50)" remarks="Код справочного значения">
+                <constraints nullable="false"/>
+            </column>
+            <column name="value_ru" type="varchar(500)" remarks="Значение на русском языке">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="company" remarks="Компании">
+            <column name="id" type="INT UNSIGNED" autoIncrement="true" remarks="Уникальный идентификатор записи">
+                <constraints primaryKey="true" primaryKeyName="pk_company"/>
+            </column>
+            <column name="company_name" type="varchar(500)" remarks="Название компании">
+                <constraints nullable="false"/>
+            </column>
+            <column name="legal_form_id" type="INT UNSIGNED" remarks="Правовая форма"/>
+            <column name="address_id" type="INT UNSIGNED" remarks="Адрес компании">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="company" baseColumnNames="legal_form_id"
+                                 referencedTableName="dic_legal_form" referencedColumnNames="id"
+                                 constraintName="fk_company_legal_form"/>
+        <addForeignKeyConstraint baseTableName="company" baseColumnNames="address_id"
+                                 referencedTableName="address" referencedColumnNames="id"
+                                 constraintName="fk_company_address"/>
+
+        <createTable tableName="company_office" remarks="Филиалы">
+            <column name="id" type="INT UNSIGNED" autoIncrement="true" remarks="Уникальный идентификатор записи">
+                <constraints primaryKey="true" primaryKeyName="pk_company_office"/>
+            </column>
+            <column name="office_name" type="varchar(500)" remarks="Название филиала">
+                <constraints nullable="false"/>
+            </column>
+            <column name="address_id" type="INT UNSIGNED" remarks="Адрес">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="company_office" baseColumnNames="address_id"
+                                 referencedTableName="address" referencedColumnNames="id"
+                                 constraintName="fk_company_office_address"/>
+
+        <createTable tableName="company_offices" remarks="Филиалы компаний">
+            <column name="id" type="INT UNSIGNED" autoIncrement="true" remarks="Уникальный идентификатор записи">
+                <constraints primaryKey="true" primaryKeyName="pk_company_offices"/>
+            </column>
+            <column name="company_id" type="INT UNSIGNED" remarks="Компания">
+                <constraints nullable="false"/>
+            </column>
+            <column name="office_id" type="INT UNSIGNED" remarks="Филиал">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="company_offices" baseColumnNames="company_id"
+                                 referencedTableName="company" referencedColumnNames="id"
+                                 constraintName="fk_company_offices_company"/>
+        <addForeignKeyConstraint baseTableName="company_offices" baseColumnNames="office_id"
+                                 referencedTableName="company_office" referencedColumnNames="id"
+                                 constraintName="fk_company_offices_office"/>
+    </changeSet>
+
+    <changeSet id="2023-05-06-dictionaries" author="vladimir.smirnov">
+        <insert tableName="dic_legal_form">
+            <column name="code" value="1"/>
+            <column name="value_ru" value="ООО"/>
+        </insert>
+        <insert tableName="dic_legal_form">
+            <column name="code" value="2"/>
+            <column name="value_ru" value="ИП"/>
+        </insert>
+        <insert tableName="dic_legal_form">
+            <column name="code" value="3"/>
+            <column name="value_ru" value="АО"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="2023-05-07-test-data" author="vladimir.smirnov">
+        <insert tableName="address">
+            <column name="post_index" value="101000"/>
+            <column name="city" value="Москва"/>
+            <column name="street" value="ул. Академика Королёва"/>
+            <column name="house" value="23"/>
+        </insert>
+        <insert tableName="address">
+            <column name="post_index" value="614000"/>
+            <column name="city" value="Пермь"/>
+            <column name="street" value="Ленина"/>
+            <column name="house" value="14/3"/>
+            <column name="flat" value="2а"/>
+        </insert>
+
+        <sql>
+            insert into company(company_name, legal_form_id, address_id)
+            values('ООО Первый',
+            (select id from dic_legal_form where code = '1'),
+            (select id from address where post_index = '101000'));
+
+            insert into company(company_name, legal_form_id, address_id)
+            values('ИП Иванов',
+            (select id from dic_legal_form where code = '2'),
+            (select id from address where post_index = '614000'));
+
+            insert into company_office(office_name, address_id)
+            values('Офис в Перми',
+            (select id from address where post_index = '614000'));
+
+            insert into company_offices(company_id, office_id)
+            values(
+            (select id from company where company_name = 'ООО Первый'),
+            (select id from company_office where office_name = 'Офис в Перми'));
+        </sql>
+    </changeSet>
+</databaseChangeLog>
