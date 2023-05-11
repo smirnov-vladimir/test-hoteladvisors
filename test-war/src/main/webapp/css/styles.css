@@ -1,0 +1,17 @@
+.grid-two-cols {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    grid-template-rows: auto auto;
+    background: #E8F5FF;
+}
+
+.grid-two-cols > div {
+    padding: 1em;
+    color: #149CFA;
+    background: #E8F5FF;
+}
+
+.index-page-link {
+    font-size: large;
+    margin-bottom: 10px;
+}

@@ -62,28 +62,16 @@
             <column name="address_id" type="INT UNSIGNED" remarks="Адрес">
                 <constraints nullable="false"/>
             </column>
+            <column name="company_id" type="INT UNSIGNED" remarks="Компания">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
         <addForeignKeyConstraint baseTableName="company_office" baseColumnNames="address_id"
                                  referencedTableName="address" referencedColumnNames="id"
                                  constraintName="fk_company_office_address"/>
-
-        <createTable tableName="company_offices" remarks="Филиалы компаний">
-            <column name="id" type="INT UNSIGNED" autoIncrement="true" remarks="Уникальный идентификатор записи">
-                <constraints primaryKey="true" primaryKeyName="pk_company_offices"/>
-            </column>
-            <column name="company_id" type="INT UNSIGNED" remarks="Компания">
-                <constraints nullable="false"/>
-            </column>
-            <column name="office_id" type="INT UNSIGNED" remarks="Филиал">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-        <addForeignKeyConstraint baseTableName="company_offices" baseColumnNames="company_id"
+        <addForeignKeyConstraint baseTableName="company_office" baseColumnNames="company_id"
                                  referencedTableName="company" referencedColumnNames="id"
-                                 constraintName="fk_company_offices_company"/>
-        <addForeignKeyConstraint baseTableName="company_offices" baseColumnNames="office_id"
-                                 referencedTableName="company_office" referencedColumnNames="id"
-                                 constraintName="fk_company_offices_office"/>
+                                 constraintName="fk_company_office_company"/>
     </changeSet>
 
     <changeSet id="2023-05-06-dictionaries" author="vladimir.smirnov">
@@ -127,14 +115,15 @@
             (select id from dic_legal_form where code = '2'),
             (select id from address where post_index = '614000'));
 
-            insert into company_office(office_name, address_id)
+            insert into company_office(office_name, address_id, company_id)
             values('Офис в Перми',
-            (select id from address where post_index = '614000'));
+            (select id from address where post_index = '614000'),
+            (select id from company where company_name = 'ООО Первый'));
 
-            insert into company_offices(company_id, office_id)
-            values(
-            (select id from company where company_name = 'ООО Первый'),
-            (select id from company_office where office_name = 'Офис в Перми'));
+            insert into company_office(office_name, address_id, company_id)
+            values('Офис в Москве',
+            (select id from address where post_index = '101000'),
+            (select id from company where company_name = 'ООО Первый'));
         </sql>
     </changeSet>
 </databaseChangeLog>

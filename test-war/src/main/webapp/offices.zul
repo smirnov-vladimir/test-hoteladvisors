@@ -1,0 +1,50 @@
+<?link  rel="stylesheet" type="text/css" href="css/styles.css"?>
+<?variable-resolver class="org.zkoss.zkplus.cdi.DelegatingVariableResolver"?>
+<window border="none"
+        apply="org.zkoss.bind.BindComposer"
+        viewModel="@id('vm') @init('ru.hoteladvisors.test.view.company.CompanyOfficeViewModel')">
+
+    <include src="WEB-INF/layout/header.zul"/>
+
+    <hlayout spacing="0" height="400px">
+        <listbox vflex="true" hflex="1" style="margin-right: 5px"
+                 model="@load(vm.offices)" selectedItem="@bind(vm.selectedOffice)">
+            <auxhead>
+                <auxheader colspan="2" align="center">Филиалы</auxheader>
+            </auxhead>
+            <listhead>
+                <listheader label="Название филиала" align="center"/>
+                <listheader label="Город" width="150px" align="center"/>
+            </listhead>
+            <template name="model" var="office">
+                <listitem>
+                    <listcell label="@load(office.officeName)" style="text-align: left"/>
+                    <listcell label="@load(office.address.city)" style="text-align: left"/>
+                </listitem>
+            </template>
+        </listbox>
+
+        <window title="Просмотр филиала" hflex="1" vflex="true" border="normal">
+            <div sclass="grid-two-cols">
+                <div>
+                    Название филиала
+                </div>
+                <div>
+                    <label value="@load(vm.selectedOffice.officeName)"/>
+                </div>
+                <div>
+                    Адрес филиала
+                </div>
+                <div>
+                    <label value="@load(vm.selectedAddress)"/>
+                </div>
+                <div>
+                    Компания
+                </div>
+                <div>
+                    <label value="@load(vm.selectedOffice.company.companyName)"/>
+                </div>
+            </div>
+        </window>
+    </hlayout>
+</window>

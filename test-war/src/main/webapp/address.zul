@@ -1,0 +1,64 @@
+<?link  rel="stylesheet" type="text/css" href="css/styles.css"?>
+<?variable-resolver class="org.zkoss.zkplus.cdi.DelegatingVariableResolver"?>
+<window border="none"
+        apply="org.zkoss.bind.BindComposer"
+        viewModel="@id('vm') @init('ru.hoteladvisors.test.view.address.AddressViewModel')">
+
+    <include src="WEB-INF/layout/header.zul"/>
+
+    <hlayout spacing="0" height="400px">
+        <listbox vflex="true" hflex="1" style="margin-right: 5px"
+                 model="@load(vm.addresses)" selectedItem="@bind(vm.selectedAddress)">
+            <auxhead>
+                <auxheader colspan="3" align="center">Адреса</auxheader>
+            </auxhead>
+            <listhead>
+                <listheader label="Индекс" width="80px" align="center"/>
+                <listheader label="Город" width="250px" align="center"/>
+                <listheader label="Улица" align="center"/>
+            </listhead>
+            <template name="model" var="address">
+                <listitem>
+                    <listcell label="@load(address.postIndex)"/>
+                    <listcell label="@load(address.city)"/>
+                    <listcell label="@load(address.street)" style="text-align: left"/>
+                </listitem>
+            </template>
+        </listbox>
+
+        <window title="Просмотр адреса" hflex="1" vflex="true" border="normal">
+            <div sclass="grid-two-cols">
+                <div>
+                    Почтовый индекс
+                </div>
+                <div>
+                    <label value="@load(vm.selectedAddress.postIndex)"/>
+                </div>
+                <div>
+                    Город
+                </div>
+                <div>
+                    <label value="@load(vm.selectedAddress.city)"/>
+                </div>
+                <div>
+                    Улица
+                </div>
+                <div>
+                    <label value="@load(vm.selectedAddress.street)"/>
+                </div>
+                <div>
+                    Дом
+                </div>
+                <div>
+                    <label value="@load(vm.selectedAddress.house)"/>
+                </div>
+                <div>
+                    Квартира
+                </div>
+                <div>
+                    <label value="@load(vm.selectedAddress.flat)"/>
+                </div>
+            </div>
+        </window>
+    </hlayout>
+</window>

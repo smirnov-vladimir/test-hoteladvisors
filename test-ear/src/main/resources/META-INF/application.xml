@@ -4,7 +4,7 @@
   <module>
     <web>
       <web-uri>test-app.war</web-uri>
-      <context-root>/test-app-web</context-root>
+      <context-root>/</context-root>
     </web>
   </module>
   <library-directory>lib</library-directory>

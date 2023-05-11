@@ -1,0 +1,9 @@
+<zk>
+    <window border="normal" title="HotelAdvisors Test">
+        <vlayout>
+            <a href="companies.zul">Компании</a>
+            <a href="address.zul">Адреса</a>
+            <a href="offices.zul">Филиалы</a>
+        </vlayout>
+    </window>
+</zk>

@@ -16,6 +16,8 @@
         <maven-war-plugin.version>3.3.2</maven-war-plugin.version>
         <javaee-api.version>8.0</javaee-api.version>
         <liquibase-core.version>4.20.0</liquibase-core.version>
+        <lombok.version>1.18.26</lombok.version>
+        <zk.version>9.6.0</zk.version>
     </properties>
 
     <modules>
